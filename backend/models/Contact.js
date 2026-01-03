@@ -77,7 +77,7 @@ const contactSchema = new mongoose.Schema(
 );
 
 /**
- * 🔐 Ensure (email + phone) is unique
+ *Ensure (email + phone) is unique
  */
 contactSchema.index({ email: 1, phone: 1 }, { unique: true });
 

@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/contact_management';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://27017/contact_management';
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
