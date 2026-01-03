@@ -17,19 +17,16 @@ app.use(cors({
 
 app.use(express.json());
 
-// Ensure DB connection for every request
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    res.status(500).json({ message: "Database connection failed" });
-  }
-});
-
 // Routes
 app.use("/api/contacts", contactRoutes);
 
+// Health check
+app.get("/", (req, res) => {
+  res.json({ message: "Contact Management API is running" });
+});
+
+// Start DB connection (not awaited for faster cold starts)
+connectDB();
 
 // NO app.listen() for Vercel
 export default app;
