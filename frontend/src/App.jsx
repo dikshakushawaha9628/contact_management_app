@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList';
 import './App.css';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
+const API_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
+console.log('API_URL:', API_URL);
 function App() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,7 +17,7 @@ function App() {
   const fetchContacts = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/contacts`);
+      const response = await fetch(`${API_URL}/api/contacts`);
       if (response.ok) {
         const data = await response.json();
         setContacts(data);
@@ -40,7 +39,7 @@ function App() {
       }
 
       // Otherwise, it's a new contact
-      const response = await fetch(`${API_URL}/contacts`, {
+      const response = await fetch(`${API_URL}/api/contacts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +94,7 @@ function App() {
 
   const handleUpdateContact = async (id, contactData) => {
     try {
-      const response = await fetch(`${API_URL}/contacts/${id}`, {
+      const response = await fetch(`${API_URL}/api/contacts/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -149,7 +148,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/contacts/${id}`, {
+      const response = await fetch(`${API_URL}/api/contacts/${id}`, {
         method: 'DELETE',
       });
 
