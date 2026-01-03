@@ -25,6 +25,11 @@ if (!cached) {
 }
 
 async function connectToDatabase() {
+  // Check if MONGODB_URI is set
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is not set');
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
@@ -32,16 +37,23 @@ async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
     };
 
     cached.promise = mongoose.connect(process.env.MONGODB_URI, opts).then((mongoose) => {
+      console.log('Connected to MongoDB');
       return mongoose;
+    }).catch((error) => {
+      console.error('MongoDB connection error:', error);
+      cached.promise = null;
+      throw error;
     });
   }
 
   try {
     cached.conn = await cached.promise;
-    console.log('Connected to MongoDB');
   } catch (e) {
     cached.promise = null;
     throw e;
@@ -57,7 +69,10 @@ app.use(async (req, res, next) => {
     next();
   } catch (error) {
     console.error('Database connection error:', error);
-    res.status(500).json({ message: 'Database connection failed' });
+    res.status(500).json({ 
+      message: 'Database connection failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
