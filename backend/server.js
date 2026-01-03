@@ -19,7 +19,6 @@ app.use(cors({
 app.use(express.json());
 // Routes
 app.use('/api/contacts', contactRoutes);
-
 // Health check
 app.get('/', (req, res) => {
   res.json({ message: 'Contact Management API is running' });

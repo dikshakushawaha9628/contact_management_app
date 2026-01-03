@@ -199,7 +199,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(saved);
 
   } catch (error) {
-    // 🔴 Duplicate email + phone
+    //  Duplicate email + phone
     if (error.code === 11000) {
       return res.status(409).json({
         message: 'This email and phone combination already exists'
@@ -226,7 +226,7 @@ router.put('/:id', async (req, res) => {
     const normalizedEmail = email.toLowerCase();
     const normalizedPhone = phone.replace(/\D/g, '');
 
-    // 🔴 Check duplicate (email + phone) excluding self
+    //  Check duplicate (email + phone) excluding self
     const existingContact = await Contact.findOne({
       email: normalizedEmail,
       phone: normalizedPhone,
