@@ -10,33 +10,36 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-
 app.use(cors({
   origin: [`${process.env.FRONTEND_URL}`],
   methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));
 app.use(express.json());
+
 // Routes
 app.use('/api/contacts', contactRoutes);
+
 // Health check
 app.get('/', (req, res) => {
   res.json({ message: 'Contact Management API is running' });
 });
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI 
+const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
   })
   .catch((error) => {
     console.error('MongoDB connection error:', error);
   });
 
-export default app;
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
+export default app;
